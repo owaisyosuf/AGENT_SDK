@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import asyncio
 
-api_key = os.getenv("OPEN_ROUTER")
+api_key = os.getenv("OPEN_ROUTER_KEY")
 
 if not api_key:
     raise ValueError("your api key is not valid")

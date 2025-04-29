@@ -88,14 +88,14 @@ async def start(message: cl.Message):
     history.append({"role": "user", "content": message.content})
     result = Runner.run_streamed(
         panacloud_agent,
-        history
+        history)
     
-    )
-    
+
     # Stream the response
     async for event in result.stream_events():
         if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
             await msg.stream_token(event.data.delta)
+    await cl.Message(content=f"Running agent {result.last_agent.name}").send()
     
     # Add assistant's final response to history after streaming is complete
     history.append({"role": "assistant", "content": result.final_output})

@@ -1,0 +1,20 @@
+[project]
+name = "assigments"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "owaisyosuf", email = "owais.251990@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "chainlit>=2.5.5",
+    "openai-agents>=0.0.14",
+]
+
+[project.scripts]
+assigments = "assigments:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

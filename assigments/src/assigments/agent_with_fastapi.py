@@ -45,17 +45,22 @@ async def llm(prompt:str):
   )
   agentic_ai_agent=Agent(
       name="agentic ai agent",
-      instructions="Understand the user's application development request. If needed, call planner or devops agent tools to fulfill the requirement accurately. if it is related to web handsoff to web agent",
+      instructions="""
+      You are an expert Agentic AI Agent Specialist.
+      Whenever a user sends you a query, you must provide an accurate, clear, and helpful response related to Agentic AI concepts, tools, or use cases.
+      If the query includes topics about DevOps, AI workflows, or planning, use your internal tools and frameworks (e.g., LangChain, CrewAI, AutoGen, etc.) to demonstrate or describe how Agentic AI can be integrated with these domains.
+      Always respond as a subject-matter expert with practical insights and examples where possible.
+      Keep the tone professional, but friendly and supportive.""",
       model=MODEL,
       handoff_description=" spacialist in agentic ai",
       handoffs=[web_agent],
       tools=[
         planner_agent.as_tool(
-          tool_name="planner tool",
+          tool_name="planner_tool",
           tool_description="specialist in planning"
         ),
         devops_agent.as_tool(
-          tool_name="devops tool",
+          tool_name="devops_tool",
           tool_description="specialist in devops"
         )
       ]

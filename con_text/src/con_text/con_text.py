@@ -55,39 +55,73 @@ MODEL="gemini-2.0-flash"
 
 # if __name__ == "__main__":
 #     asyncio.run(main())
+# @dataclass
+# class UserInfo1:
+#     name: str
+#     uid: int
+#     location: str = "Pakistan"
+
+# @function_tool
+# async def fetch_user_age(wrapper: RunContextWrapper[UserInfo1]) -> str:
+#     '''Returns the age of the user.'''
+#     return f"User {wrapper.context.name} is 30 years old"
+
+# @function_tool
+# async def fetch_user_location(wrapper: RunContextWrapper[UserInfo1]) -> str:
+#     '''Returns the location of the user.'''
+#     return f"User {wrapper.context.name} is from {wrapper.context.location}"
+
+# async def main():
+#     user_info = UserInfo1(name="Muhammad Qasim", uid=123 , location="karachi")
+
+#     agent = Agent[UserInfo1](
+#         name="Assistant",
+#         tools=[fetch_user_age,fetch_user_location],
+#         model=MODEL
+#     )
+
+#     result = await Runner.run(
+#         starting_agent=agent,
+#         input="What is the age of the user? current location of his/her?",
+#         context=user_info,
+#     )
+
+#     print(result.final_output)
+#     # The user John is 47 years old.
+
+# if __name__ == "__main__":
+#     asyncio.run(main())
+
 @dataclass
-class UserInfo1:
-    name: str
-    uid: int
-    location: str = "Pakistan"
+class user_info:
+    name:str
+    age:int
+    address:str="karachi"
 
 @function_tool
-async def fetch_user_age(wrapper: RunContextWrapper[UserInfo1]) -> str:
+async def get_user_name(wrapper:RunContextWrapper[user_info]) -> str:
     '''Returns the age of the user.'''
-    return f"User {wrapper.context.name} is 30 years old"
-
+    f"user name is{wrapper.context.name} and he/she live in {wrapper.context.address}" 
 @function_tool
-async def fetch_user_location(wrapper: RunContextWrapper[UserInfo1]) -> str:
-    '''Returns the location of the user.'''
-    return f"User {wrapper.context.name} is from {wrapper.context.location}"
+async def get_user_age(wrapper:RunContextWrapper[user_info])->str:
+    '''return user name with age and address'''
+    f"user name is {wrapper.context.name} user age is {wrapper.context.age} and he located at {wrapper.context.address}"
 
 async def main():
-    user_info = UserInfo1(name="Muhammad Qasim", uid=123)
+    user_data=user_info(name="owais", age=36)
 
-    agent = Agent[UserInfo1](
-        name="Assistant",
-        tools=[fetch_user_age,fetch_user_location],
+    agent=Agent(
+        name="assistant",
+        # instructions="return user info using get_user_name and get_user_age tool",
+        tools=[get_user_name,get_user_age],
         model=MODEL
     )
 
-    result = await Runner.run(
-        starting_agent=agent,
-        input="What is the age of the user? current location of his/her?",
-        context=user_info,
+    result=await Runner.run(
+        agent,
+        "what is the age",
+        context=user_data
     )
-
     print(result.final_output)
-    # The user John is 47 years old.
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())

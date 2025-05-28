@@ -4,6 +4,8 @@ load_dotenv()
 import os
 import asyncio
 from fastapi import FastAPI
+from pydantic import BaseModel
+
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -22,8 +24,12 @@ set_default_openai_api("chat_completions")
 
 app=FastAPI()
 
+class inputPrompt(BaseModel):
+  prompt:str
+
 @app.post("/llm")
-async def llm(prompt:str):
+async def llm(input:inputPrompt):
+  prompt=input.prompt
   web_agent=Agent(
       name="web agent",
       instructions="You are a web development agent. Your sole responsibility is to answer questions strictly related to web development.",
@@ -109,6 +115,6 @@ async def llm(prompt:str):
     input=prompt,
   )
 
-  return {"response": result.final_output}
+  return {"response": f"{result.last_agent.name} : {result.final_output}"}
 
 
